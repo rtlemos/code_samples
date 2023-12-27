@@ -61,6 +61,39 @@ def maxAreaOfIslandSuccinct(grid: List[List[int]]) -> int:
     return max(areas) if len(areas) > 0 else 0
 
 
+def maxAreaOfIslandNotRecursive(grid: List[List[int]]) -> int:
+    # useful for large grids, to avoid stack overflow
+    data = np.array(grid)
+    m, n = data.shape
+    delta = [[-1, 0], [1, 0], [0, -1], [0, 1]]  # down, up, left, right
+    
+    def explore(y, x):
+        # adds valid land pixels to list of sought pixels
+        search_cells = [[y + d[0], x + d[1]] for d in delta]
+        seek.extend(
+            [s for s in search_cells
+             if 0 < s[0] < m and 0 < s[1] < n and data[s[0], s[1]] == 1])
+    
+    areas = []
+    for la in range(m):
+        for ln in range(n):
+            if data[la, ln] == 1:  # new island discovered
+                cnt = 1
+                seek = []
+                data[la, ln] = 0
+                explore(la, ln)
+                while len(seek) > 0:
+                    sla, sln = seek.pop(0)
+                    if data[sla, sln] == 1:  # new pixel within island
+                        cnt += 1
+                        data[sla, sln] = 0
+                        explore(sla, sln)
+                areas.append(cnt)
+
+    max_area = max(areas) if len(areas) > 0 else 0
+    return max_area
+
+
 print(maxAreaOfIsland([[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]))
 print(maxAreaOfIslandSuccinct([[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]))
 print(maxAreaOfIsland([[0,0,0,0,0,0,0,0]]))
