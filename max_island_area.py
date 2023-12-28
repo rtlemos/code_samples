@@ -26,8 +26,8 @@ def maxAreaOfIsland(grid: List[List[int]]) -> int:
     # recursive function that explores a newly discovered island
     def explore(y: int, x: int):
         for delta in search_cells:
-            if (0 < y + delta[0] < m and
-                    0 < x + delta[1] < n and
+            if (0 <= y + delta[0] < m and
+                    0 <= x + delta[1] < n and
                     grid[y + delta[0]][x + delta[1]] == 1):
                 new_y = y + delta[0]
                 new_x = x + delta[1]
@@ -51,7 +51,7 @@ def maxAreaOfIslandSuccinct(grid: List[List[int]]) -> int:
     m, n = len(grid), len(grid[0])
 
     def explore(y: int, x: int):
-        if 0 < y < m and 0 < x < n and grid[y][x] == 1:
+        if 0 <= y < m and 0 <= x < n and grid[y][x] == 1:
             grid[y][x] = 0
             return 1 + explore(y-1, x) + explore(y+1, x) + explore(y, x-1) + explore(y, x+1)
         else:
@@ -72,7 +72,7 @@ def maxAreaOfIslandNotRecursive(grid: List[List[int]]) -> int:
         search_cells = [[y + d[0], x + d[1]] for d in delta]
         seek.extend(
             [s for s in search_cells
-             if 0 < s[0] < m and 0 < s[1] < n and data[s[0], s[1]] == 1])
+             if 0 <= s[0] < m and 0 <= s[1] < n and data[s[0], s[1]] == 1])
     
     areas = []
     for la in range(m):
